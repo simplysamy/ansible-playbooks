@@ -33,7 +33,7 @@
 
     - name: Set Permissions
       file:
-        path: '{{nexus_home_parent_directory}}'
+        path: '{{nexus_home_parent_directory}}/nexus'
         state: directory
         mode: '0755'
 
