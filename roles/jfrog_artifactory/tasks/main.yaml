@@ -1,0 +1,28 @@
+  - name: Create directory
+    file:
+      path: ~/jfrog/artifactory/var/etc
+      state: directory
+      mode: '0777'
+
+  - name: Change file ownership
+    file:
+      path: ~/jfrog/artifactory/var
+      owner: 1030
+      group: 1030
+      recurse: yes
+
+  - name: Create a file
+    file:
+      path: ~/jfrog/artifactory/var/etc/system.yaml
+      state: touch
+
+  - name: Pull and run Docker image
+    docker_container:
+      name: artifactory
+      image: releases-docker.jfrog.io/jfrog/artifactory-oss:latest
+      state: started
+      published_ports:
+        - "8081:8081"
+        - "8082:8082"
+      volumes:
+        - "~/jfrog/artifactory/var:/var/opt/jfrog/artifactory"

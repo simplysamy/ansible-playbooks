@@ -1,0 +1,15 @@
+######################
+# Setup Build server #
+######################
+---
+- hosts: demo
+  become: yes
+  roles:
+   - maven
+   - docker
+   - awscli
+   - jfrog_artifactory
+   - kubectl
+   - jenkins
+   - jenkins-node
+   - nexus
