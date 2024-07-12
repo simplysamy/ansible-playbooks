@@ -2,14 +2,7 @@
 # Setup Build server #
 ######################
 ---
-- hosts: demo
+- hosts: jfrog
   become: yes
   roles:
-   - maven
-   - docker
-   - awscli
    - jfrog_artifactory
-   - kubectl
-   - jenkins
-   - jenkins-node
-   - nexus

@@ -1,22 +1,49 @@
 ---
+- name: Install fontconfig and OpenJDK 
+  apt:
+    name: 
+      - fontconfig
+      - openjdk-17-jre
+    state: present
+    
+- name: Checking if jenkins is already installed
+  stat: 
+    path: /var/lib/jenkins
+  register: jenkins_installed
+
+- name: Download Jenkins key
+  get_url:
+    url: '{{jenkins_key_url}}'
+    dest: '{{jenkins_key_destination}}'
+  when: jenkins_installed.stat.exists != True  
+
 - name: Add Jenkins Repository
   apt_repository:
-    repo: "{{ jenkins_repo }}"
+    repo: '{{jenkins_repo_entry}}'
     state: present
+    filename: jenkins.list
     update_cache: yes
-
-- name: Import Jenkins Repository GPG Key
-  apt_key:
-    url: "{{ jenkins_gpg_key }}"
-    state: present
+  when: jenkins_installed.stat.exists != True
+    
 
 - name: Install Jenkins
   apt:
-    name: jenkins
+    name: "{{ jenkins_package_name }}"
     state: present
+  when: jenkins_installed.stat.exists != True
 
-- name: Start Jenkins Service
-  service:
+- name: Start and enable Jenkins service
+  systemd:
     name: jenkins
     state: started
     enabled: yes
+  when: jenkins_installed.stat.exists != True
+
+- name: Read Jenkins initial admin password
+  shell:
+    cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
+    register: initial_admin_password
+
+- name: Display Jenkins initial admin password
+  debug:
+    msg: "Jenkins initial admin password: {{ initial_admin_password.stdout }}" 

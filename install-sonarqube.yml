@@ -1,0 +1,8 @@
+######################
+# Setup Build server #
+######################
+---
+- hosts: sonarqube
+  become: yes
+  roles:
+   - sonarqube

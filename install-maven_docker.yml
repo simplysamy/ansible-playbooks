@@ -1,0 +1,8 @@
+######################
+# Setup Build server #
+######################
+- hosts: build_server
+  become: yes
+  roles:
+  - docker
+  - maven

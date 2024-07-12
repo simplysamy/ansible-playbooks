@@ -1,0 +1,8 @@
+######################
+# Setup Build server #
+######################
+---
+- hosts: jenkins
+  become: yes
+  roles:
+   - jenkins

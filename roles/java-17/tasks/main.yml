@@ -1,0 +1,7 @@
+---
+- name: Install fontconfig and OpenJDK 
+  apt:
+    name: 
+      - fontconfig
+      - "{{ java_package }}"
+    state: present
