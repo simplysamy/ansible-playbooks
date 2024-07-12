@@ -1,4 +1,8 @@
 ---
+- name: Update cache
+  apt:
+    update_cache: yes
+
 - name: Install fontconfig and OpenJDK 
   apt:
     name: 
