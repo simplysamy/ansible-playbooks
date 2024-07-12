@@ -2,7 +2,7 @@
 # Setup Build server #
 ######################
 ---
-- hosts: jenkins-node
+- hosts: jenkins-nodes
   become: yes
   roles:
    - jenkins-node_java17
