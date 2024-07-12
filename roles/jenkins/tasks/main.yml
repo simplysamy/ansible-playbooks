@@ -28,7 +28,7 @@
 
 - name: Install Jenkins
   apt:
-    name: "{{ jenkins_package_name }}"
+    name: jenkins
     state: present
   when: jenkins_installed.stat.exists != True
 
