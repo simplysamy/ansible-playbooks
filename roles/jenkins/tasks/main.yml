@@ -28,7 +28,7 @@
 
 - name: Install Jenkins
   apt:
-    name: jenkins
+    name: "{{ jenkins_package_name }}"
     state: present
   when: jenkins_installed.stat.exists != True
 
@@ -40,9 +40,9 @@
   when: jenkins_installed.stat.exists != True
 
 - name: Read Jenkins initial admin password
-  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
-  register: initial_admin_password
-  changed_when: false
+  shell:
+    cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
+    register: initial_admin_password
 
 - name: Display Jenkins initial admin password
   debug:
