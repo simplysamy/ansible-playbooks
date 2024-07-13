@@ -24,8 +24,9 @@
 
 - name: Add Docker repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{ docker_repo_url }} $(lsb_release -cs) stable"
     state: present
+    filename: docker.list
   notify: reload apt cache
 
 - name: Update apt cache
