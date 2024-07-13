@@ -1,49 +1,31 @@
-- name: Install Nexus Repository Manager
-  hosts: nexus_vm
-  become: true
-  tasks:
-    - name: Install OpenJDK 
-      apt:
-        name: openjdk-{{java_version}}-jdk
-        state: present
+---
+- name: Create SonarQube directories on the control node
+  module: file
+  path: ~/ansible/sonarqube
+  state: directory
+  run_once: true
 
-    - name: Check & create downloads dir
-      file:
-        path: '{{ nexus_home_parent_directory}}'
-        state: directory
-        mode: 0755
+- name: Change directory to ~/ansible/sonarqube
+  module: command
+  argv: chdir=~/ansible/sonarqube
+  run_once: true
 
-    - name: Checking if Nexux is already installed
-      stat: 
-        path: '{{ nexus_home_parent_directory }}/nexus-{{ nexus_version }}'
-        register: nexus_installed
+- name: Pull SonarQube Docker image
+  docker_image:
+    name: sonarqube
+    source: pull
 
-    - name: Download Nexus
-      get_url:
-        url: '{{nexus_download_url}}'
-        dest: '{{nexus_home_parent_directory}}/{{ nexus_file_name }}'
-      when: nexus_installed.stat.exists != True  
-
-    - name: Unzip Nexus
-      unarchive:
-        src: '{{ nexus_home_parent_directory}}/{{ nexus_file_name }}'
-        dest: '{{ nexus_home_parent_directory}}'
-        remote_src: yes
-      when: nexus_installed.stat.exists != True
-
-    - name: Set Permissions
-      file:
-        path: '{{nexus_home_parent_directory}}'
-        state: directory
-        mode: '0755'
-
-    - name: Start Nexus Service
-      service:
-        name: nexus
-        state: started
-
-    - name: Cleaning Up
-      file:
-        state: absent
-        path: '{{ nexus_home_parent_directory}}/{{ nexus_file_name }}'
-  
+- name: Run SonarQube container
+  docker_container:
+    name: sonarqube
+    image: sonarqube
+    state: started
+    ports:
+      - "9000:9000"
+    volumes:
+      - "{{ sonarqube_conf_dir }}:/opt/sonarqube/conf"
+      - "{{ sonarqube_data_dir }}:/opt/sonarqube/data"
+      - "{{ sonarqube_logs_dir }}:/opt/sonarqube/logs"
+      - "{{ sonarqube_extensions_dir }}:/opt/sonarqube/extensions"
+    env:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"

@@ -1,0 +1,4 @@
+sonarqube_conf_dir: /opt/sonarqube/conf
+sonarqube_data_dir: /opt/sonarqube/data
+sonarqube_logs_dir: /opt/sonarqube/logs
+sonarqube_extensions_dir: /opt/sonarqube/extensions
