@@ -9,45 +9,53 @@
     state: present
     update_cache: yes
 
-- name: Add Docker's official GPG key directory
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: '0755'
-
-- name: Download Docker GPG key
-  ansible.builtin.get_url:
-    url: "{{ docker_gpg_url }}"
-    dest: /etc/apt/keyrings/docker.gpg
-    mode: '0644'
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: "{{docker_gpg_url}}"
+    state: present
   notify: reload apt cache
 
-- name: Add Docker repository
+- name: Add repository into sources list
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{ docker_repo_url }} $(lsb_release -cs) stable"
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{docker_repo_url}} {{ ansible_lsb.codename }} stable"
     state: present
-    filename: docker.list
+    filename: docker
   notify: reload apt cache
 
 - name: Update apt cache
   apt:
     update_cache: yes
 
-- name: Install Docker packages
+- name: Install Docker 23.0.1-1
   apt:
-    name: 
-      - docker-ce
-      - docker-ce-cli
+    name:
+      - docker-ce=5:23.0.1-1~ubuntu.22.04~jammy
+      - docker-ce-cli=5:23.0.1-1~ubuntu.22.04~jammy
       - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
     state: present
-
-- name: Add user to Docker group
-  user:
-    name: "{{ ansible_user }}"
-    groups: docker
-    append: yes
+    update_cache: true
  
-- name: Source .bashrc
-  shell: source ~/.bashrc
+- name: Setup docker user
+  user:
+    name: docker
+    groups: "docker"
+    append: true
+    sudo_user: true 
+        
+- name: Install Docker-Compose & Set Permission
+  get_url:
+    url: "{{docker_compose_url}}"
+    dest: /usr/local/bin/docker-compose
+    mode: '755'
+    
+- name: Create Docker-Compose symlink
+  ansible.builtin.command:
+    cmd: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    creates: /usr/bin/docker-compose
+
+ 
+- name: Restart Docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+    enabled: true
