@@ -1,3 +1,4 @@
+---
 - name: Update apt cache
   apt:
     update_cache: yes
@@ -20,20 +21,22 @@
 
 - name: Download Docker GPG key
   ansible.builtin.get_url:
-      url: "https://download.docker.com/linux/ubuntu/gpg"
-      dest: /etc/apt/keyrings/docker.gpg
-      mode: '0644'
+    url: "{{ docker_gpg_url }}"
+    dest: /etc/apt/keyrings/docker.gpg
+    mode: '0644'
   notify: reload apt cache
 
 - name: Add Docker repository
-  apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
     state: present
+    filename: docker.list
+  notify: reload apt cache
 
 - name: Update apt cache
   apt:
     update_cache: yes
-    
+
 - name: Install Docker packages
   apt:
     name: 
@@ -46,13 +49,9 @@
 
 - name: Add user to Docker group
   user:
-      name: "{{ ansible_user }}"
-      groups: docker
-      append: yes
-
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
  
-- name: Restart Docker
-  ansible.builtin.service:
-    name: docker
-    state: restarted
-    enabled: true
+- name: Source .bashrc
+  shell: source ~/.bashrc
