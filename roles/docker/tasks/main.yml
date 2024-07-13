@@ -1,10 +1,14 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
 - name: Install prerequisite packages
   apt:
     name: 
-        - ca-certificates
-        - curl
-        - gnupg
-        - lsb-release
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
     state: present
     update_cache: yes
 
