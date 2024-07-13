@@ -1,13 +1,12 @@
 ---
 - name: Create SonarQube directories on the control node
-  module: file
-  path: ~/ansible/sonarqube
-  state: directory
+  file:
+    path: ~/ansible/sonarqube
+    state: directory
   run_once: true
 
 - name: Change directory to ~/ansible/sonarqube
-  module: command
-  argv: chdir=~/ansible/sonarqube
+  shell: chdir=~/ansible/sonarqube
   run_once: true
 
 - name: Pull SonarQube Docker image
