@@ -17,7 +17,7 @@
 
 - name: Add repository into sources list
   ansible.builtin.apt_repository:
-    repo: "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] {{ docker_repo_url }} $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable"
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] {{ docker_repo_url }} {{ ansible_distribution_release }} stable"
     state: present
     filename: docker
   notify: reload apt cache
