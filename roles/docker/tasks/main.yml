@@ -22,15 +22,15 @@
 - name: Download Docker GPG key
   ansible.builtin.get_url:
     url: "{{ docker_gpg_url }}"
-    dest: /etc/apt/keyrings/docker.gpg
+    dest: /etc/apt/keyrings/docker.asc
     mode: '0644'
   notify: reload apt cache
 
 - name: Add Docker repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
     state: present
-    filename: docker.list
+    filename: docker
   notify: reload apt cache
 
 - name: Update apt cache
@@ -53,5 +53,8 @@
     groups: docker
     append: yes
  
-- name: Source .bashrc
-  shell: source ~/.bashrc
+
+- name: Restart Docker
+  ansible.builtin.service:
+     name: docker
+     state: restart
