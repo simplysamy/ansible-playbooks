@@ -1,4 +1,5 @@
 ---
 docker_gpg_url: "https://download.docker.com/linux/ubuntu/gpg"
 docker_repo_url: "https://download.docker.com/linux/ubuntu"
-docker_user: ubuntu
+docker_key_path: "/etc/apt/keyrings/docker.asc"
+docker_user: "ubuntu"
