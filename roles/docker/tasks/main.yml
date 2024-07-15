@@ -49,12 +49,13 @@
 
 - name: Add user to Docker group
   user:
-    name: "{{ ansible_user }}"
+    name: ubuntu
     groups: docker
     append: yes
  
 
-- name: Restart Docker
-  ansible.builtin.service:
-     name: docker
-     state: restart
+# - name: Restart Docker
+#   ansible.builtin.service:
+#      name: docker
+#      state: restarted
+#      enabled: true
