@@ -2,7 +2,7 @@
 # Setup Build server #
 ######################
 ---
-- hosts: sonarqube
+- hosts: demo_server
   become: yes
   roles:
-   - sonarqube
+   - docker

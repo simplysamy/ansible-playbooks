@@ -2,7 +2,7 @@
 # Setup Build server #
 ######################
 ---
-- hosts: sonarqube
+- hosts: build_server
   become: yes
   roles:
-   - sonarqube
+   - awscli

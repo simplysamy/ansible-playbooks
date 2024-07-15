@@ -5,4 +5,5 @@
 - hosts: jfrog
   become: yes
   roles:
+   - docker
    - jfrog_artifactory
