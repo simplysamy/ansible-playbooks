@@ -28,15 +28,14 @@
 
 - name: Add Docker repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by={{docker_key_path}}] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
+    repo: "deb [arch={{ os_arch }} signed-by={{docker_key_path}}] {{ docker_repo_url }} {{ ansible_lsb.codename }} stable"
     state: present
     filename: docker
   notify: reload apt cache
 
-- name: Update all packages to their latest version
-  ansible.builtin.apt:
-    name: "*"
-    state: latest
+- name: Update apt cache
+  apt:
+    update_cache: yes
 
 
 - name: Install Docker packages
