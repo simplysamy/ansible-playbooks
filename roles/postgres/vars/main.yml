@@ -1,0 +1,4 @@
+pgdg_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+pgdg_key_path: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+pgdg_repo_file: /etc/apt/sources.list.d/pgdg.list
+pgdg_repo: "deb [signed-by={{ pgdg_key_path }}] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
