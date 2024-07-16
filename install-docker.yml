@@ -2,7 +2,7 @@
 # Setup Build server #
 ######################
 ---
-- hosts: demo_server
+- hosts: demo
   become: yes
   roles:
    - docker
