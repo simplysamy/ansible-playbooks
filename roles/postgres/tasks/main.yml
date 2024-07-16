@@ -41,7 +41,7 @@
 - name: Adding postgres to sudoer file
   lineinfile:
     dest: /etc/sudoers
-    line: '{{items}}'
+    line: '{{item}}'
   with_items:
     - 'postgres ALL=(ALL:ALL) ALL' 
 
