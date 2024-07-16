@@ -1,9 +1,7 @@
 - name: Create SonarQube user
   user:
     name: sonarqube
-    group: sonarqube
-    home: /opt/sonarqube
-    shell: /bin/bash
+  become: yes
 
 - name: Install Java version 17
   apt:
