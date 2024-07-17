@@ -30,7 +30,7 @@
   
 - name: Checking if SonarQube is already installed
   stat: 
-    path: "{{sonarqube_final_dir}}"
+    path: "{{sonarqube_zip_dest}}"
   register: soanrqube_installed
 
 - name: Download SonarQube
