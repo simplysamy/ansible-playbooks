@@ -1,11 +1,8 @@
 sonarqube_version: "10.3.0.82913"
 sonarqube_zip_url: "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-{{ sonarqube_version }}.zip"
-# sonarqube_install_dir: "/opt"
+
 sonarqube_zip_dest: "/opt/sonarqube-{{ sonarqube_version }}.zip"
 
-# sonarqube_unarchive_dest: "{{ sonarqube_install_dir }}"
 sonarqube_unarchive_dest: "/opt"
-
-#sonarqube_final_dir: "{{ sonarqube_install_dir }}/sonarqube" 
 
 sonarqube_final_dir: "/opt/sonarqube" 

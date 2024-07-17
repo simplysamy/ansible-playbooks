@@ -33,12 +33,18 @@
   apt:
     update_cache: yes
 
+- name: Checking if PostgreSQL is already installed
+  stat: 
+    path: /etc/postgresql
+  register: postgres_installed
+
 - name: Install the latest version of PostgreSQL
   apt:
     pkg: '{{item}}'
   with_items:
     - postgresql
     - python3-psycopg2
+  when: postgres_installed.stat.exists != True
 
 - name: Adding postgres to sudoer file
   lineinfile:
