@@ -2,8 +2,6 @@
   user:
     name: sonarqube
   become: yes
-  become_method: enable
-  allow_world_readable_tmpfiles: true
 
 - name: Install Java version 17
   apt:
@@ -29,21 +27,36 @@
       - unzip
       - software-properties-common
       - wget
+  
+- name: Checking if SonarQube is already installed
+  stat: 
+    path: "{{sonarqube_final_dir}}"
+  register: soanrqube_installed
 
 - name: Download SonarQube
   get_url:
     url: "{{ sonarqube_zip_url }}"
-    dest: "{{ sonarqube_zip_dest }}"
+    dest: "{{ sonarqube_zip_dest }}" # /opt/sonarqube-{version}.zip
+  when: soanrqube_installed.stat.exists != True
 
 - name: Unarchive SonarQube
   unarchive:
-    src: "{{ sonarqube_zip_dest }}"
-    dest: "{{ sonarqube_unarchive_dest }}"
+    src: "{{ sonarqube_zip_dest }}" # /opt/sonarqube-{version}.zip
+    dest: "{{ sonarqube_unarchive_dest }}" # /opt
     remote_src: yes
 
 - name: Rename SonarQube directory
-  shell: mv {{ sonarqube_unarchive_dest }}/sonarqube-{{ sonarqube_version }} {{ sonarqube_final_dir }}
+  shell: mv "{{ sonarqube_unarchive_dest }}/sonarqube-{{ sonarqube_version }}" "{{ sonarqube_final_dir }}"
+         # mv /opt/sonarqube-{version}                                               /opt/sonarqube
 
+- name: Change ownership of /opt/sonarqube directory
+  ansible.builtin.file:
+    path: /opt/sonarqube
+    owner: sonarqube
+    group: sonarqube
+    recurse: yes
+
+   
 - name: Replace sonar.web.port in /opt/sonarqube/conf/sonar.properties
   lineinfile:
     path: /opt/sonarqube/conf/sonar.properties

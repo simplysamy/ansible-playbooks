@@ -8,6 +8,7 @@
     name:
       - curl
       - ca-certificates
+      - p
     state: present
 
 - name: Create directory for PostgreSQL key
@@ -34,9 +35,10 @@
 
 - name: Install the latest version of PostgreSQL
   apt:
-    name: postgresql
-    state: present
-    update_cache: yes
+    pkg: '{{item}}'
+  with_items:
+    - postgresql
+    - python3-psycopg2
 
 - name: Adding postgres to sudoer file
   lineinfile:
@@ -52,11 +54,32 @@
     state: started
     enabled: yes
 
-- name: Create sonarqube user
-  become_user: postgres
-  shell: sudo -u postgres psql -c "CREATE USER sonarqube WITH PASSWORD 'sonarqube';"
+- name: Install ACL
+  apt:
+    name: acl
+    state: present
 
-- name: Create sonarqube database
+# - name: Create sonarqube user
+#   become_user: postgres
+#   shell: sudo -u postgres psql -c "CREATE USER sonarqube WITH PASSWORD 'sonarqube';"
+
+- name: Ensure sonarqube user is present
+  become: true
   become_user: postgres
-  shell:
-    sudo -u postgres createdb --owner=sonarqube sonarqube
+  community.postgresql.postgresql_user:
+    name: sonarqube
+    password: sonarqube
+    state: present
+
+# - name: Create sonarqube database
+#   become_user: postgres
+#   shell:
+#     sudo -u postgres createdb --owner=sonarqube sonarqube
+
+- name: Ensure the sonarqube database is present
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: sonarqube
+    owner: sonarqube
+    state: present
