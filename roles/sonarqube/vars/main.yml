@@ -3,4 +3,4 @@ sonarqube_zip_url: "https://binaries.sonarsource.com/Distribution/sonarqube/sona
 sonarqube_install_dir: "/opt"
 sonarqube_zip_dest: "{{ sonarqube_install_dir }}/sonarqube-{{ sonarqube_version }}.zip"
 sonarqube_unarchive_dest: "{{ sonarqube_install_dir }}"
-sonarqube_final_dir: "{{ sonarqube_install_dir }}/sonarqube"
+sonarqube_final_dir: "{{ sonarqube_install_dir }}/sonarqube" 

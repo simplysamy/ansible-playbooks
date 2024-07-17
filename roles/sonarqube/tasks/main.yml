@@ -2,6 +2,8 @@
   user:
     name: sonarqube
   become: yes
+  become_method: enable
+  allow_world_readable_tmpfiles: true
 
 - name: Install Java version 17
   apt:
