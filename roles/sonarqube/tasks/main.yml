@@ -106,3 +106,8 @@
     name: sonarqube
     state: started
     enabled: yes
+
+- name: Cleaning Up
+  file:
+    state: absent
+    path: '/opt/sonarqube-{{ sonarqube_version }}.zip'
