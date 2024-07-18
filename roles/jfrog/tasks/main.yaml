@@ -1,0 +1,57 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - openjdk-11-jdk
+  update_cache: yes 
+    
+- name: Download and execute MariaDB repository setup
+  shell: curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s --
+
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+        
+- name: Install MariaDB server and client
+  apt:
+    name:
+      - mariadb-server
+      - mariadb-client
+    state: present 
+  
+- name: Start and enable MariaDB service
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+  
+- name: Add JFrog Artifactory repository
+  apt_repository:
+    repo: "{{jfrog_repo}}"
+    state: present
+ 
+ 
+- name: Add JFrog GPG key
+  apt_key:
+    url: "{{jfrog_key}}"
+    state: present
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+        
+- name: Install JFrog Artifactory OSS
+  apt:
+    name: jfrog-artifactory-oss
+    state: present
+        
+- name: Start and enable JFrog Artifactory service
+  systemd:
+    name: artifactory.service
+    state: started
+    enabled: yes 
+        
