@@ -5,5 +5,4 @@
 - hosts: jfrog
   become: yes
   roles:
-   - docker
-   - jfrog_docker
+   - jfrog
