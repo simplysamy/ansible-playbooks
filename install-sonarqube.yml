@@ -1,5 +1,5 @@
 ######################
-# Setup Build server #
+# Setup Sonarqube server #
 ######################
 ---
 - hosts: demo

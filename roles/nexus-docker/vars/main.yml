@@ -1,0 +1,6 @@
+nexus_image: "sonatype/nexus3"
+nexus_container_name: "nexus"
+nexus_ports:
+  - "8081:8081"
+  - "8085:8085"
+nexus_volume: "nexus-data:/sonatype-work"

@@ -1,9 +1,9 @@
 ######################
-# Setup Build server #
+# Setup Sonarqube server #
 ######################
 ---
-- hosts: jfrog
+- hosts: demo
   become: yes
   roles:
    - docker
-   - jfrog_docker
+   - sonarqube-docker

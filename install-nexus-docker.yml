@@ -2,7 +2,8 @@
 # Setup Artifact server #
 ######################
 ---
-- hosts: jfrog
+- hosts: nexus
   become: yes
   roles:
-   - jfrog
+   - docker
+   - nexus-docker
