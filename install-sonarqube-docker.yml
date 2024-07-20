@@ -6,4 +6,5 @@
   become: yes
   roles:
    - docker
+   - java-17
    - sonarqube-docker

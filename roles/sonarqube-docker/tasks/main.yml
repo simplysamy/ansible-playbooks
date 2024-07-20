@@ -1,30 +1,36 @@
-- name: Create SonarQube directories on the control node
-  file:
-    path: ~/ansible/sonarqube
-    state: directory
-  run_once: true
-
-- name: Change directory to ~/ansible/sonarqube
-  shell: chdir=~/ansible/sonarqube
-  run_once: true
-
-  
-- name: Pull SonarQube Docker image
+- name: Pull the Sonar Docker Image
   docker_image:
     name: sonarqube
     source: pull
 
-- name: Run SonarQube container
+- name: Create a Docker Network
+  docker_network:
+    name: sonar-network
+    state: present
+
+- name: Start a Database Container
   docker_container:
-    name: sonarqube
+    name: sonar-db
+    image: postgres:9.6
+    state: started
+    networks:
+      - name: sonar-network
+    env:
+      POSTGRES_USER: "{{ postgres_user }}"
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+      POSTGRES_DB: "{{ postgres_db }}"
+
+
+- name: Start the Sonar Container
+  docker_container:
+    name: sonar
     image: sonarqube
     state: started
     ports:
       - "9000:9000"
-    volumes:
-      - "{{ sonarqube_conf_dir }}:/opt/sonarqube/conf"
-      - "{{ sonarqube_data_dir }}:/opt/sonarqube/data"
-      - "{{ sonarqube_logs_dir }}:/opt/sonarqube/logs"
-      - "{{ sonarqube_extensions_dir }}:/opt/sonarqube/extensions"
+    networks:
+      - name: sonar-network
     env:
-      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+      SONARQUBE_JDBC_URL: "{{sonarqube_jdbc_url}}"
+      SONAR_JDBC_USERNAME: "{{sonar_jdbc_username}}"
+      SONAR_JDBC_PASSWORD: "{{sonar_jdbc_password}}" 

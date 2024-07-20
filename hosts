@@ -1,0 +1,5 @@
+[hosts]
+localhost
+
+[demo]
+node01 ansible_hosts=172.31.22.140 ansible_user=ubuntu

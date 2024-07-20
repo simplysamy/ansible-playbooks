@@ -1,4 +1,7 @@
-sonarqube_conf_dir: /opt/sonarqube/conf
-sonarqube_data_dir: /opt/sonarqube/data
-sonarqube_logs_dir: /opt/sonarqube/logs
-sonarqube_extensions_dir: /opt/sonarqube/extensions
+postgres_user: sonar
+postgres_password: sonar
+postgres_db: sonar
+
+sonarqube_jdbc_url: jdbc:postgresql://sonar-db:5432/sonar
+sonar_jdbc_username: sonar
+sonar_jdbc_password: sonar
