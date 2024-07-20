@@ -3,4 +3,4 @@ nexus_container_name: "nexus"
 nexus_ports:
   - "8081:8081"
   - "8085:8085"
-nexus_volume: "nexus-data:/sonatype-work"
+nexus_volume: "nexus-data:/nexus-data"
