@@ -40,9 +40,8 @@
   when: jenkins_installed.stat.exists != True
 
 - name: Read Jenkins initial admin password
-  shell:
-    cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
-    register: initial_admin_password
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: initial_admin_password
 
 - name: Display Jenkins initial admin password
   debug:
