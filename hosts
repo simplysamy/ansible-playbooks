@@ -1,5 +1,8 @@
 [hosts]
 localhost
 
-[demo]
-node01 ansible_hosts=172.31.22.140 ansible_user=ubuntu
+[jenkins]
+jenkins_master ansible_host=172.31.24.10 ansible_user=ubuntu
+
+[build_server]
+jenkins_node01 ansible_host=172.31.28.113 ansible_user=ubuntu
