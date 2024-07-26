@@ -1,0 +1,11 @@
+######################
+# Setup Build server #
+######################
+---
+- hosts: build_server
+  become: yes
+  roles:
+   - awscli
+   - maven
+   - docker
+   
