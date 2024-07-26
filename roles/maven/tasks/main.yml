@@ -4,9 +4,8 @@
   - name : Install JDK & Git
     apt: name={{item}} state=present
     loop:
-    - openjdk-8-jdk
+    - openjdk-17-jdk
     - git
-    - openjdk-11-jdk
 
   - name: Check & create downloads dir
     file:
