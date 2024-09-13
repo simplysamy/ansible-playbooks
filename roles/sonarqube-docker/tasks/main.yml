@@ -34,3 +34,8 @@
       SONARQUBE_JDBC_URL: "{{sonarqube_jdbc_url}}"
       SONAR_JDBC_USERNAME: "{{sonar_jdbc_username}}"
       SONAR_JDBC_PASSWORD: "{{sonar_jdbc_password}}" 
+
+- name: Restart Docker Service
+  service:
+    name: docker
+    state: restarted
