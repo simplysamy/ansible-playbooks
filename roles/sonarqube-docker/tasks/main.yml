@@ -13,6 +13,7 @@
     name: sonar-db
     image: postgres:9.6
     state: started
+    restart_policy: unless-stopped
     networks:
       - name: sonar-network
     env:
