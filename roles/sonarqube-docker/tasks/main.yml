@@ -27,6 +27,7 @@
     name: sonar
     image: sonarqube
     state: started
+    restart_policy: unless-stopped
     ports:
       - "9000:9000"
     networks:
