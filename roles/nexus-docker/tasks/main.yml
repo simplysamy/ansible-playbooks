@@ -1,11 +1,11 @@
 
-- name: Pull latest Nexus Docker image
+- name: Pull the latest Nexus Docker image
   docker_image:
     name: "{{ nexus_image }}"
     source: pull
 
 - name: Create Nexus volume
-  community.docker.docker_volume:
+  docker_volume:
     name: "nexus-data"
 
 - name: Run Nexus container
@@ -13,7 +13,7 @@
     name: "{{ nexus_container_name }}"
     image: "{{ nexus_image }}"
     state: started
-    restart_policy: always
+    restart_policy: unless-stopped
     ports: "{{ nexus_ports }}"
     volumes:
           - "{{ nexus_volume }}"
