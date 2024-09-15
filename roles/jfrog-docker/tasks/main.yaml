@@ -1,6 +1,6 @@
 - name: Create Artifactory home directory
   file:
-    path: "{{ jfrog_home }}/artifactory/var/etc/"
+    path: "/ubuntu/home/jforg/artifactory/var/etc/"
     state: directory
     mode: "0755"
     owner: 1030
@@ -16,15 +16,15 @@
           url: jdbc:postgresql://host.docker.internal:5432/artifactorydb
           username: artifactory
           password: password
-    dest: "{{ jfrog_home }}/artifactory/var/etc/system.yaml"
+    dest: "/ubuntu/home/jforg/artifactory/var/etc/system.yaml"
     owner: 1030
     group: 1030
     mode: "0644"
     
 - name: Run PostgreSQL Docker container
   docker_container:
-    name: postgres
-    image: library/postgres
+    name: artifactory-postgres
+    image: postgres:latest
     state: started
     restart_policy: always
     env:
@@ -41,7 +41,13 @@
     state: started
     restart_policy: unless-stop
     volumes:
-      - "{{ jfrog_home }}/artifactory/var/:/var/opt/jfrog/artifactory"
+      - "/ubuntu/home/jforg/artifactory/var/:/var/opt/jfrog/artifactory"
     published_ports:
       - 8081:8081
       - 8082:8082
+    env:  
+      DB_TYPE: postgresql
+      DB_HOST: artifactory-postgres
+      POSTGRES_USER: artifactory
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: artifactorydb
