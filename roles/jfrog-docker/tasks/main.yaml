@@ -13,7 +13,7 @@
         database:
           driver: org.postgresql.Driver
           type: postgresql
-          url: jdbc:postgresql://host.docker.internal:5432/artifactorydb
+          url: jdbc:postgresql://artifactory-postgres:5432/artifactorydb
           username: artifactory
           password: password
     dest: "/ubuntu/home/jforg/artifactory/var/etc/system.yaml"
@@ -31,7 +31,7 @@
       POSTGRES_USER: artifactory
       POSTGRES_PASSWORD: password
       POSTGRES_DB: artifactorydb
-    published_ports:
+    ports:
       - 5432:5432
       
 - name: Run Artifactory Docker container
@@ -42,12 +42,12 @@
     restart_policy: unless-stop
     volumes:
       - "/ubuntu/home/jforg/artifactory/var/:/var/opt/jfrog/artifactory"
-    published_ports:
-      - 8081:8081
-      - 8082:8082
-    env:  
+    env:
       DB_TYPE: postgresql
       DB_HOST: artifactory-postgres
-      POSTGRES_USER: artifactory
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: artifactorydb
+      DB_USER: artifactory
+      DB_PASSWORD: password
+      DB_URL: jdbc:postgresql://artifactory-postgres:5432/artifactorydb
+    ports:
+      - 8081:8081
+      - 8082:8082   
