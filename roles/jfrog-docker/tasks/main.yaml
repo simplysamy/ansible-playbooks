@@ -39,7 +39,7 @@
      name: artifactory
      image: releases-docker.jfrog.io/jfrog/artifactory-pro:7.90.7
      state: started
-     restart_policy: onstop
+     restart_policy: unless-stopped
      volumes:
        - "{{ jfrog_home }}/artifactory/var/:/var/opt/jfrog/artifactory"
      published_ports:
