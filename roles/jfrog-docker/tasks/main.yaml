@@ -6,6 +6,22 @@
     owner: 1030
     group: 1030
     
+- name: Generate master key for Artifactory
+  vars:
+    master_key: "{{ lookup('password', '/dev/null length=32 chars=hex') }}"
+  debug:
+    msg: "Master key generated: {{ master_key }}"
+
+- name: Copy the generated master key to the file
+  copy:
+    content: "{{ master_key }}"
+    dest: /ubuntu/home/jfrog/artifactory/var/etc/master.key
+    owner: 1030
+    group: 1030
+    mode: '0600'
+  creates: /ubuntu/home/jfrog/artifactory/var/etc/master.key
+
+    
 - name: Create system.yaml file
   copy:
     content: |
