@@ -1,29 +1,47 @@
-  - name: Create directory
-    file:
-      path: ~/jfrog/artifactory/var/etc
-      state: directory
-      mode: '0777'
+- name: Create Artifactory home directory
+  file:
+    path: "{{ jfrog_home }}/artifactory/var/etc/"
+    state: directory
+    mode: '0755'
+    owner: 1030
+    group: 1030
 
-  - name: Change file ownership
-    file:
-      path: ~/jfrog/artifactory/var
-      owner: 1030
-      group: 1030
-      recurse: yes
+ - name: Create system.yaml file
+   copy:
+     content: |
+       shared:
+         database:
+           driver: org.postgresql.Driver
+           type: postgresql
+           url: jdbc:postgresql://host.docker.internal:5432/artifactorydb
+           username: artifactory
+           password: password
+     dest: "{{ jfrog_home }}/artifactory/var/etc/system.yaml"
+     owner: 1030
+     group: 1030
+     mode: '0644'
 
-  - name: Create a file
-    file:
-      path: ~/jfrog/artifactory/var/etc/system.yaml
-      state: touch
+ - name: Run PostgreSQL Docker container
+   docker_container:
+     name: postgres
+     image: library/postgres
+     state: started
+     restart_policy: always
+     env:
+       POSTGRES_USER: artifactory
+       POSTGRES_PASSWORD: password
+       POSTGRES_DB: artifactorydb
+     published_ports:
+       - "5432:5432"
 
-  - name: Pull and run Docker image
-    docker_container:
-      name: artifactory
-      image: releases-docker.jfrog.io/jfrog/artifactory-oss:latest
-      state: started
-      restart_policy: unless-stopped
-      published_ports:
-        - "8081:8081"
-        - "8082:8082"
-      volumes:
-        - "~/jfrog/artifactory/var:/var/opt/jfrog/artifactory"
+ - name: Run Artifactory Docker container
+   docker_container:
+     name: artifactory
+     image: releases-docker.jfrog.io/jfrog/artifactory-pro:7.90.7
+     state: started
+     restart_policy: onstop
+     volumes:
+       - "{{ jfrog_home }}/artifactory/var/:/var/opt/jfrog/artifactory"
+     published_ports:
+       - "8081:8081"
+       - "8082:8082"
