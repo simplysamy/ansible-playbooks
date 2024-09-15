@@ -2,46 +2,46 @@
   file:
     path: "{{ jfrog_home }}/artifactory/var/etc/"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: 1030
     group: 1030
-
- - name: Create system.yaml file
-   copy:
-     content: |
-       shared:
-         database:
-           driver: org.postgresql.Driver
-           type: postgresql
-           url: jdbc:postgresql://host.docker.internal:5432/artifactorydb
-           username: artifactory
-           password: password
-     dest: "{{ jfrog_home }}/artifactory/var/etc/system.yaml"
-     owner: 1030
-     group: 1030
-     mode: '0644'
-
- - name: Run PostgreSQL Docker container
-   docker_container:
-     name: postgres
-     image: library/postgres
-     state: started
-     restart_policy: always
-     env:
-       POSTGRES_USER: artifactory
-       POSTGRES_PASSWORD: password
-       POSTGRES_DB: artifactorydb
-     published_ports:
-       - "5432:5432"
-
- - name: Run Artifactory Docker container
-   docker_container:
-     name: artifactory
-     image: releases-docker.jfrog.io/jfrog/artifactory-pro:7.90.7
-     state: started
-     restart_policy: unless-stopped
-     volumes:
-       - "{{ jfrog_home }}/artifactory/var/:/var/opt/jfrog/artifactory"
-     published_ports:
-       - "8081:8081"
-       - "8082:8082"
+    
+- name: Create system.yaml file
+  copy:
+    content: |
+      shared:
+        database:
+          driver: org.postgresql.Driver
+          type: postgresql
+          url: jdbc:postgresql://host.docker.internal:5432/artifactorydb
+          username: artifactory
+          password: password
+    dest: "{{ jfrog_home }}/artifactory/var/etc/system.yaml"
+    owner: 1030
+    group: 1030
+    mode: "0644"
+    
+- name: Run PostgreSQL Docker container
+  docker_container:
+    name: postgres
+    image: library/postgres
+    state: started
+    restart_policy: always
+    env:
+      POSTGRES_USER: artifactory
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: artifactorydb
+    published_ports:
+      - 5432:5432
+      
+- name: Run Artifactory Docker container
+  docker_container:
+    name: artifactory
+    image: releases-docker.jfrog.io/jfrog/artifactory-pro:7.90.7
+    state: started
+    restart_policy: unless-stop
+    volumes:
+      - "{{ jfrog_home }}/artifactory/var/:/var/opt/jfrog/artifactory"
+    published_ports:
+      - 8081:8081
+      - 8082:8082
