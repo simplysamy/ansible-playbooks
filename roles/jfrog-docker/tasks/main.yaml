@@ -26,7 +26,7 @@
     name: artifactory-postgres
     image: postgres:latest
     state: started
-    restart_policy: always
+    restart_policy: unless-stopped
     env:
       POSTGRES_USER: artifactory
       POSTGRES_PASSWORD: password
@@ -39,7 +39,7 @@
     name: artifactory
     image: releases-docker.jfrog.io/jfrog/artifactory-pro:7.90.7
     state: started
-    restart_policy: unless-stop
+    restart_policy: unless-stopped
     volumes:
       - "/ubuntu/home/jforg/artifactory/var/:/var/opt/jfrog/artifactory"
     env:
